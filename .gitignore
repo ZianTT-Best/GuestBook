@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+
+# Next.js
+.next
+out
+
+# Cloudflare
+.vercel
+.wrangler
+
+# Env
+.env
+.env.local
+.env.*.local
+.dev.vars
+
+# Misc
+*.log
+npm-debug.log*
