@@ -30,8 +30,8 @@ export default function CommentCard({ comment }: { comment: Comment }) {
   }, [comment.content]);
 
   const avatarUrl = comment.email
-    ? getGravatarUrl(comment.email, comment.country, 80)
-    : `https://www.gravatar.com/avatar/00000000000000000000000000000000?s=80&d=retro`;
+    ? getGravatarUrl(comment.email, comment.country, 160)
+    : `https://www.gravatar.com/avatar/00000000000000000000000000000000?s=160&d=retro`;
 
   const handleLike = async () => {
     if (liked) return;
@@ -54,64 +54,72 @@ export default function CommentCard({ comment }: { comment: Comment }) {
   const dateStr = new Date(comment.createdAt).toLocaleString("zh-CN");
 
   return (
-    <div className="terminal-card border-l-4 border-l-terminal-green">
-      <div className="flex items-start gap-3">
+    <div className="flex border-b border-black">
+      {/* Left: Avatar area */}
+      <div className="w-[140px] shrink-0 border-r border-black p-4 flex flex-col items-start">
         <img
           src={avatarUrl}
           alt="avatar"
-          className="w-10 h-10 rounded border border-terminal-border shrink-0"
+          className="w-20 h-20 border border-black mb-3 object-cover"
           loading="lazy"
         />
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-1">
-            <span className="text-terminal-green font-bold text-sm">{comment.nickname}</span>
-            {comment.country && (
-              <span className="text-xs text-terminal-muted bg-terminal-border px-1 rounded">
-                {comment.country}
-              </span>
-            )}
-            <span className="text-xs text-terminal-muted ml-auto">{dateStr}</span>
-          </div>
-          {comment.website && (
-            <a
-              href={comment.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-terminal-amber hover:underline block mb-2 truncate"
-            >
-              {comment.website}
-            </a>
-          )}
+        <span className="text-xs font-bold uppercase tracking-wide">
+          {comment.nickname}
+        </span>
+        {comment.email && (
+          <span className="text-[10px] text-gb-muted mt-1 break-all leading-tight">
+            {comment.email}
+          </span>
+        )}
+        {comment.website && (
+          <a
+            href={comment.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-gb-muted hover:text-black hover:underline break-all leading-tight mt-0.5"
+          >
+            {comment.website}
+          </a>
+        )}
+      </div>
+
+      {/* Right: Content area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 p-4 min-h-[80px]">
           <div
-            className="markdown-body text-sm"
+            className="markdown-body text-sm leading-relaxed"
             dangerouslySetInnerHTML={{ __html: html }}
           />
-          <div className="flex items-center gap-4 mt-3 text-xs">
+        </div>
+        <div className="border-t border-black flex items-center justify-between flex-wrap">
+          <div className="flex">
             <button
               onClick={handleLike}
               disabled={liked}
-              className={`flex items-center gap-1 transition-colors ${
-                liked ? "text-terminal-red" : "text-terminal-muted hover:text-terminal-green"
-              }`}
+              className="px-3 py-1.5 text-[11px] uppercase tracking-wider border-r border-black hover:bg-gb-light transition-colors disabled:opacity-50 flex items-center gap-1"
             >
               <span>{liked ? "♥" : "♡"}</span>
-              <span>{likeCount}</span>
+              <span>Like ({likeCount})</span>
             </button>
             <a
               href={twitterUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-terminal-muted hover:text-terminal-amber transition-colors"
+              className="px-3 py-1.5 text-[11px] uppercase tracking-wider border-r border-black hover:bg-gb-light transition-colors flex items-center gap-1"
             >
-              Share to X
+              <span>↗</span>
+              <span>Share to X</span>
             </a>
             <button
               onClick={() => setShowQuote(!showQuote)}
-              className="text-terminal-muted hover:text-terminal-green transition-colors"
+              className="px-3 py-1.5 text-[11px] uppercase tracking-wider border-r border-black hover:bg-gb-light transition-colors"
             >
               {showQuote ? "Close Quote" : "Quote Image"}
             </button>
           </div>
+          <span className="px-3 py-1.5 text-[11px] text-gb-muted">
+            {dateStr}
+          </span>
         </div>
       </div>
       {showQuote && <QuoteImage comment={comment} onClose={() => setShowQuote(false)} />}

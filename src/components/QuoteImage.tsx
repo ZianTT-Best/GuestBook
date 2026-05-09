@@ -43,34 +43,34 @@ export default function QuoteImage({ comment, onClose }: { comment: Comment; onC
     canvas.style.height = `${height}px`;
     ctx.scale(2, 2);
 
-    ctx.fillStyle = "#0a0a0a";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = "#00ff41";
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.strokeRect(10, 10, width - 20, height - 20);
 
-    ctx.fillStyle = "#00ff41";
+    ctx.fillStyle = "#000000";
     ctx.font = "bold 16px Menlo, Monaco, 'Courier New', monospace";
     ctx.fillText("ZianTT GuestBook // Packet Capture", padding, padding);
 
-    ctx.strokeStyle = "#30363d";
+    ctx.strokeStyle = "#000000";
     ctx.beginPath();
     ctx.moveTo(padding, padding + 10);
     ctx.lineTo(width - padding, padding + 10);
     ctx.stroke();
 
-    ctx.fillStyle = "#c9d1d9";
+    ctx.fillStyle = "#000000";
     ctx.font = "16px Menlo, Monaco, 'Courier New', monospace";
     lines.forEach((line, i) => {
       ctx.fillText(line, padding, padding + 40 + i * lineHeight);
     });
 
     const footerY = height - padding;
-    ctx.fillStyle = "#ffa657";
+    ctx.fillStyle = "#000000";
     ctx.font = "14px Menlo, Monaco, 'Courier New', monospace";
     ctx.fillText(`> ${comment.nickname}`, padding, footerY - 20);
-    ctx.fillStyle = "#8b949e";
+    ctx.fillStyle = "#888888";
     ctx.font = "12px Menlo, Monaco, 'Courier New', monospace";
     ctx.fillText(new Date(comment.createdAt).toLocaleString("zh-CN"), padding, footerY);
 
@@ -85,15 +85,18 @@ export default function QuoteImage({ comment, onClose }: { comment: Comment; onC
   };
 
   return (
-    <div className="mt-4 border border-terminal-border bg-black p-4">
-      <canvas ref={canvasRef} className="w-full max-w-full border border-terminal-border" />
+    <div className="border-t border-black p-4">
+      <canvas ref={canvasRef} className="w-full max-w-full border border-black" />
       <div className="flex gap-2 mt-3">
-        <button onClick={handleDownload} className="terminal-btn text-xs">
+        <button
+          onClick={handleDownload}
+          className="px-3 py-1.5 text-[11px] uppercase tracking-wider border border-black bg-black text-white hover:bg-white hover:text-black transition-colors"
+        >
           Download PNG
         </button>
         <button
           onClick={onClose}
-          className="terminal-btn text-xs border-terminal-red text-terminal-red hover:bg-terminal-red/20"
+          className="px-3 py-1.5 text-[11px] uppercase tracking-wider border border-black hover:bg-gb-light transition-colors"
         >
           Close
         </button>

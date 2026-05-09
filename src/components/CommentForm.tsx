@@ -20,14 +20,14 @@ export default function CommentForm({ onSuccess }: { onSuccess: () => void }) {
     e.preventDefault();
     if (!content.trim()) return;
     setSubmitting(true);
-    setPowStatus("> Requesting challenge...");
+    setPowStatus("Requesting challenge...");
 
     try {
       const challengeRes = await fetch("/api/challenge");
       const { nonce, difficulty } = await challengeRes.json();
-      setPowStatus(`> Computing PoW (difficulty=${difficulty})...`);
+      setPowStatus(`Computing PoW (difficulty=${difficulty})...`);
       const suffix = await solvePow(nonce, difficulty);
-      setPowStatus("> Submitting packet...");
+      setPowStatus("Submitting packet...");
 
       const res = await fetch("/api/comments", {
         method: "POST",
@@ -44,85 +44,83 @@ export default function CommentForm({ onSuccess }: { onSuccess: () => void }) {
 
       const result = await res.json();
       if (res.ok) {
-        setPowStatus("> Packet delivered successfully!");
+        setPowStatus("Packet delivered successfully!");
         setNickname("");
         setEmail("");
         setWebsite("");
         setContent("");
         onSuccess();
       } else {
-        setPowStatus(`> ERROR: ${result.error || "Submission failed"}`);
+        setPowStatus(`ERROR: ${result.error || "Submission failed"}`);
       }
     } catch (err) {
-      setPowStatus("> ERROR: Network failure");
+      setPowStatus("ERROR: Network failure");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="terminal-card">
-      <div className="text-terminal-green text-xs mb-3 flex items-center gap-2 flex-wrap">
-        <span className="text-terminal-amber">root@visitor</span>:
-        <span className="text-terminal-muted">~</span>$ echo &quot;Leave a trace&quot;
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="relative">
-            <span className="absolute left-2 top-2 text-terminal-green/50 select-none">&gt;</span>
+    <div className="border-b border-black">
+      <form onSubmit={handleSubmit} className="p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 border border-black mb-0">
+          <div className="relative border-b sm:border-b-0 sm:border-r border-black">
+            <span className="absolute left-2 top-2 text-gb-muted text-xs select-none">&gt;</span>
             <input
               type="text"
               placeholder="nickname"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className="terminal-input pl-6"
+              className="w-full bg-white px-3 py-2 pl-6 text-sm focus:outline-none placeholder:text-gb-muted"
             />
             <button
               type="button"
               onClick={handleRandomName}
-              className="absolute right-2 top-2 text-xs text-terminal-amber hover:underline"
+              className="absolute right-2 top-2 text-[10px] uppercase tracking-wider text-gb-muted hover:text-black border border-black px-1.5 py-0.5"
             >
               random
             </button>
           </div>
-          <div className="relative">
-            <span className="absolute left-2 top-2 text-terminal-green/50 select-none">@</span>
+          <div className="relative border-b sm:border-b-0 sm:border-r border-black">
+            <span className="absolute left-2 top-2 text-gb-muted text-xs select-none">@</span>
             <input
               type="email"
               placeholder="email (for Gravatar)"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="terminal-input pl-6"
+              className="w-full bg-white px-3 py-2 pl-6 text-sm focus:outline-none placeholder:text-gb-muted"
             />
           </div>
           <div className="relative">
-            <span className="absolute left-2 top-2 text-terminal-green/50 select-none">~</span>
+            <span className="absolute left-2 top-2 text-gb-muted text-xs select-none">~</span>
             <input
               type="url"
               placeholder="website"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              className="terminal-input pl-6"
+              className="w-full bg-white px-3 py-2 pl-6 text-sm focus:outline-none placeholder:text-gb-muted"
             />
           </div>
         </div>
-        <div className="relative">
+        <div className="border border-black border-t-0">
           <textarea
             placeholder="Enter your message (Markdown supported)..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
             maxLength={2000}
             rows={4}
-            className="terminal-input resize-none"
+            className="w-full bg-white px-3 py-2 text-sm focus:outline-none placeholder:text-gb-muted resize-none"
           />
-          <div className="text-right text-xs text-terminal-muted mt-1">{content.length}/2000</div>
+          <div className="flex items-center justify-between px-3 py-2 border-t border-black">
+            <div className="text-xs text-gb-muted min-h-[1.25rem]">{powStatus}</div>
+            <div className="text-xs text-gb-muted">{content.length}/2000</div>
+          </div>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <div className="text-xs text-terminal-green min-h-[1.25rem]">{powStatus}</div>
+        <div className="flex items-center justify-end mt-3">
           <button
             type="submit"
             disabled={submitting || !content.trim()}
-            className="terminal-btn disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+            className="px-4 py-2 text-xs uppercase tracking-wider border border-black bg-black text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? "Transmitting..." : "Submit [ENTER]"}
           </button>
